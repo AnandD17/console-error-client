@@ -1,0 +1,81 @@
+; cursor.dic
+; Updated configuration including glassomorphic cursor design and developer guidelines.
+; Top-level developer guidelines (for whoever implements or consumes this file):
+; - Use early returns in logic.
+; - Style with Tailwind classes; avoid separate CSS when possible.
+; - Descriptive variable/function names; event handlers prefixed with "handle".
+; - Accessibility: elements should have tabindex=0, aria-labels, keyboard interaction support.
+; - Glassomorphic effect must use colors #5563F5 and #A284EC.
+; - The Design strictly follows the dark theme.
+; - Smooth cursor follow with interpolation/easing.
+; - Hover/active state tweaks: scale, opacity, shadow adjustments.
+; - DRY, readable, complete implementation; no placeholders.
+
+[General]
+default_shape = circle
+default_size = 44px
+smooth_follow = true
+follow_easing = 0.15
+pointer_interpolation = 0.2
+hide_when_idle = false
+idle_timeout_ms = 1200
+aria_label = "Custom glassomorphic cursor"
+role = presentation
+
+[GlassomorphicCursor]
+primary_color = #5563F5
+secondary_color = #A284EC
+
+# Visual appearance
+background_base = rgba(255,255,255,0.08)
+gradient_overlay = linear-gradient(135deg, #5563F5 0%, #A284EC 100%)
+backdrop_blur = 14px
+border = 1px solid rgba(255,255,255,0.2)
+border_radius = 50%
+box_shadow = 0 20px 60px -5px rgba(85,99,245,0.4), 0 0 30px rgba(162,132,236,0.3)
+size = 44px
+opacity_default = 0.9
+transition = transform 0.2s ease, opacity 0.2s ease
+
+# Interaction state defaults
+hover_scale = 1.1
+hover_opacity = 1
+hover_box_shadow = 0 25px 70px -5px rgba(85,99,245,0.5), 0 0 35px rgba(162,132,236,0.4)
+hover_transition = transform 0.12s ease-out, box-shadow 0.15s ease
+
+active_scale = 0.95
+active_opacity = 0.85
+active_transition = transform 0.1s ease-in
+
+follow_smoothness = 0.18
+
+[States]
+hover:
+  scale = 1.1
+  opacity = 1
+  box_shadow = 0 25px 70px -5px rgba(85,99,245,0.5),0 0 35px rgba(162,132,236,0.4)
+  transition = transform 0.12s ease-out, box-shadow 0.15s ease
+active:
+  scale = 0.95
+  opacity = 0.85
+  transition = transform 0.1s ease-in
+
+[Fallback]
+fallback_cursor = default
+
+[ReactIntegrationPseudocode]
+; 1. Define a React component named GlassCursor.
+; 2. useRef to store the cursor DOM element and refs for current and target positions.
+; 3. Add window mousemove listener: handleMouseMove(event) updates target position (event.clientX/Y).
+;    - Name handler: const handleMouseMove = (e) => { set targetX/Y from e.clientX/Y; }.
+; 4. useEffect to start animation loop via requestAnimationFrame:
+;    - On each frame, interpolate current position toward target using follow_smoothness.
+;    - Apply transform: translate to current position minus 50% to center.
+;    - Update style: gradient background, backdrop-filter blur, border, box-shadow, size, opacity.
+; 5. Manage hover/active states by listening to pointer events or exposing context:
+;    - On hoverable items, set state to apply hover_scale and hover_opacity; revert on leave.
+; 6. Accessibility:
+;    - Ensure the cursor element has aria-label (from General), is non-interfering (pointer-events: none), and keyboard-focusable context elements use visible focus outlines.
+; 7. Cleanup: remove listeners and cancel animation on unmount.
+; 8. State logic uses early returns to avoid unnecessary work.
+; 9. All style application prefers Tailwind-equivalent utility composition where possible; fallback inline styles for dynamic values.
