@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import Dropdown from "@/components/ui/Dropdown";
 import { cn } from "@/lib/utils";
@@ -24,16 +25,35 @@ export default function AppSelector({
   className = "",
 }: AppSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const dropdownItems = apps.map((app) => ({
-    id: app.id,
-    label: app.name,
-    onClick: () => onAppSelect(app),
-    className:
-      selectedApp.id === app.id
-        ? "bg-gradient-to-r from-[#5563F5]/20 to-[#A284EC]/20"
-        : "",
-  }));
+  const handleAddApp = () => {
+    setIsOpen(false);
+    navigate("/create-app");
+  };
+
+  const dropdownItems = [
+    ...apps.map((app) => ({
+      id: app.id,
+      label: app.name,
+      onClick: () => onAppSelect(app),
+      className:
+        selectedApp.id === app.id
+          ? "bg-gradient-to-r from-[#5563F5]/20 to-[#A284EC]/20"
+          : "",
+    })),
+    {
+      id: "add-app",
+      label: (
+        <div className="flex items-center gap-2 text-[#5563F5] font-medium">
+          <Plus size={16} />
+          <span>Add App</span>
+        </div>
+      ),
+      onClick: handleAddApp,
+      className: "border-t border-gray-600 mt-1 pt-1",
+    },
+  ];
 
   const trigger = (
     <Button

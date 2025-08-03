@@ -4,10 +4,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Home,
-  Users,
   Settings,
-  BarChart3,
-  FileText,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import AppSelector from "@/components/ui/AppSelector";
@@ -20,9 +18,7 @@ interface SidebarProps {
 
 const sidebarItems = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Users", href: "/users", icon: Users },
-  { name: "Reports", href: "/reports", icon: FileText },
+  { name: "Issues", href: "/issues", icon: AlertCircle },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
@@ -47,7 +43,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   return (
     <div
       className={cn(
-        "fixed left-0 top-0 h-[calc(100vh-20px)] glass text-white transition-all duration-300 z-50 m-4 mt-2 mb-2 rounded-2xl bg-gray-600/10",
+        "fixed left-0 top-0 h-[calc(100vh-20px)] text-white transition-all duration-300 z-50 m-4 mt-2 mb-2 rounded-2xl bg-gray-600/10",
         isCollapsed ? "w-16" : "w-60"
       )}
     >
@@ -68,7 +64,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className="text-white hover:bg-white/10 hover:scale-110"
+          className="text-white hover:bg-white/10 hover:scale-110 cursor-pointer"
         >
           {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </Button>
